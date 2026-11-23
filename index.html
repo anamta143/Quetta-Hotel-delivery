@@ -23,7 +23,13 @@
     .menu-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 2px;border-bottom:1px solid var(--line)}
     .item-info{display:flex;align-items:center;gap:10px;min-width:0}
     .item-info input{width:19px;height:19px;accent-color:var(--green);flex-shrink:0}
-    .food-photo{width:78px;height:78px;flex:0 0 78px;border-radius:12px;background-image:url("assets/food-sprite-hd.webp");background-size:500% 600%;background-repeat:no-repeat;background-color:#eef1ed;box-shadow:0 2px 7px #17231f20;overflow:hidden}
+    .food-photo{width:104px;height:104px;flex:0 0 104px;border:0;padding:0;border-radius:13px;background:#eef1ed;box-shadow:0 2px 8px #17231f20;overflow:hidden;cursor:zoom-in;display:block}
+    .food-photo img{display:block;width:100%;height:100%;object-fit:cover}
+    .photo-viewer{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.96);display:none;align-items:center;justify-content:center;padding:48px 10px 18px}
+    .photo-viewer.open{display:flex}
+    .photo-viewer img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+    .photo-close{position:absolute;top:10px;right:14px;width:44px;height:44px;border:0;border-radius:50%;background:#ffffff22;color:white;font-size:30px;line-height:1;cursor:pointer}
+    .photo-caption{position:absolute;left:12px;right:12px;bottom:8px;text-align:center;color:#fff;font-size:13px;text-shadow:0 1px 4px #000}
     .item-name{font-weight:650;font-size:14px}
     .item-price{font-size:13px;color:var(--green);font-weight:750;margin-top:3px}
     .qty-input{width:66px;padding:9px 5px;border:1px solid #cbd5ce;border-radius:8px;text-align:center;font-size:16px}
@@ -70,6 +76,11 @@
     </section>
     <footer>Quetta Hotel &amp; Delivery · Gujranwala</footer>
   </main>
+  <div id="photoViewer" class="photo-viewer" role="dialog" aria-modal="true" aria-label="Food photo preview">
+    <button class="photo-close" id="photoClose" type="button" aria-label="Close photo">×</button>
+    <img id="photoViewerImage" alt="">
+    <div class="photo-caption" id="photoCaption"></div>
+  </div>
   <script>
     const MY_WHATSAPP_NUMBER = "923442440747";
     const menuData = [
@@ -108,14 +119,143 @@
             { id: "k9", category: "Khana Point", name: "Chicken Biryani Full", price: 250 },
             { id: "k10", category: "Khana Point", name: "Raita", price: 30 }
         ];
-    const imageTiles = {
-      c1:[0,0],c2:[1,0],c3:[2,0],c4:[3,0],c5:[4,0],
-      c6:[0,1],c8:[1,1],c9:[2,1],c10:[3,1],
-      p1:[4,1],p2:[0,2],p3:[1,2],p4:[2,2],p5:[3,2],p6:[0,4],
-      p7:[0,3],p8:[1,3],p9:[2,3],p10:[3,3],
-      k1:[4,3],k2:[0,4],k3:[1,4],k4:[2,4],k5:[3,4],k6:[4,4],
-      k7:[0,5],k8:[1,5],k9:[2,5],k10:[4,5]
-    };
+    const imageUrls = {
+  "c1": {
+    "thumb": "https://images.pexels.com/photos/20270270/free-photo-of-tea-and-ginger-roots.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/20270270/free-photo-of-tea-and-ginger-roots.jpeg?auto=compress&w=1600"
+  },
+  "c2": {
+    "thumb": "https://images.pexels.com/photos/5946623/pexels-photo-5946623.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/5946623/pexels-photo-5946623.jpeg?auto=compress&w=1600"
+  },
+  "c3": {
+    "thumb": "https://images.pexels.com/photos/29650995/free-photo-of-masala-chai-with-ginger-on-marble-surface.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/29650995/free-photo-of-masala-chai-with-ginger-on-marble-surface.jpeg?auto=compress&w=1600"
+  },
+  "c4": {
+    "thumb": "https://images.pexels.com/photos/33104714/free-photo-of-traditional-indian-chai-in-clay-cups.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/33104714/free-photo-of-traditional-indian-chai-in-clay-cups.jpeg?auto=compress&w=1600"
+  },
+  "c5": {
+    "thumb": "https://images.pexels.com/photos/40330458/free-photo-of-cozy-chai-tea-with-spices-on-wooden-table.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/40330458/free-photo-of-cozy-chai-tea-with-spices-on-wooden-table.jpeg?auto=compress&w=1600"
+  },
+  "c6": {
+    "thumb": "https://images.pexels.com/photos/34773966/free-photo-of-colorful-ceramic-tea-cups-on-rustic-table.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/34773966/free-photo-of-colorful-ceramic-tea-cups-on-rustic-table.jpeg?auto=compress&w=1600"
+  },
+  "c8": {
+    "thumb": "https://images.pexels.com/photos/12865880/pexels-photo-12865880.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/12865880/pexels-photo-12865880.jpeg?auto=compress&w=1600"
+  },
+  "c9": {
+    "thumb": "https://images.pexels.com/photos/2697931/pexels-photo-2697931.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/2697931/pexels-photo-2697931.jpeg?auto=compress&w=1600"
+  },
+  "c10": {
+    "thumb": "https://images.pexels.com/photos/5947062/pexels-photo-5947062.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/5947062/pexels-photo-5947062.jpeg?auto=compress&w=1600"
+  },
+  "p1": {
+    "thumb": "https://images.pexels.com/photos/37555450/free-photo-of-close-up-of-paratha-cooking-on-skillet.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/37555450/free-photo-of-close-up-of-paratha-cooking-on-skillet.jpeg?auto=compress&w=1600"
+  },
+  "p2": {
+    "thumb": "https://images.pexels.com/photos/12737919/pexels-photo-12737919.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/12737919/pexels-photo-12737919.jpeg?auto=compress&w=1600"
+  },
+  "p3": {
+    "thumb": "https://images.pexels.com/photos/30350307/free-photo-of-delicious-flatbread-with-creamy-cheese-and-herbs.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/30350307/free-photo-of-delicious-flatbread-with-creamy-cheese-and-herbs.jpeg?auto=compress&w=1600"
+  },
+  "p4": {
+    "thumb": "https://images.pexels.com/photos/23913881/pexels-photo-23913881.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/23913881/pexels-photo-23913881.jpeg?auto=compress&w=1600"
+  },
+  "p5": {
+    "thumb": "https://images.pexels.com/photos/32592720/free-photo-of-delicious-herb-topped-flatbread-with-melted-cheese.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/32592720/free-photo-of-delicious-herb-topped-flatbread-with-melted-cheese.jpeg?auto=compress&w=1600"
+  },
+  "p6": {
+    "thumb": "https://images.pexels.com/photos/29143174/free-photo-of-close-up-of-delicious-stuffed-flatbread-on-plate.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/29143174/free-photo-of-close-up-of-delicious-stuffed-flatbread-on-plate.jpeg?auto=compress&w=1600"
+  },
+  "p7": {
+    "thumb": "https://images.pexels.com/photos/8994584/pexels-photo-8994584.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/8994584/pexels-photo-8994584.jpeg?auto=compress&w=1600"
+  },
+  "p8": {
+    "thumb": "https://images.pexels.com/photos/36445101/free-photo-of-artisan-bakers-preparing-traditional-flatbread.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/36445101/free-photo-of-artisan-bakers-preparing-traditional-flatbread.jpeg?auto=compress&w=1600"
+  },
+  "p9": {
+    "thumb": "https://images.pexels.com/photos/36445284/free-photo-of-bakers-preparing-traditional-flatbread-in-stone-oven.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/36445284/free-photo-of-bakers-preparing-traditional-flatbread-in-stone-oven.jpeg?auto=compress&w=1600"
+  },
+  "p10": {
+    "thumb": "https://images.pexels.com/photos/35189865/free-photo-of-golden-brown-chapati-on-hot-skillet.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/35189865/free-photo-of-golden-brown-chapati-on-hot-skillet.jpeg?auto=compress&w=1600"
+  },
+  "k1": {
+    "thumb": "https://images.pexels.com/photos/23913881/pexels-photo-23913881.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/23913881/pexels-photo-23913881.jpeg?auto=compress&w=1600"
+  },
+  "k2": {
+    "thumb": "https://images.pexels.com/photos/29143174/free-photo-of-close-up-of-delicious-stuffed-flatbread-on-plate.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/29143174/free-photo-of-close-up-of-delicious-stuffed-flatbread-on-plate.jpeg?auto=compress&w=1600"
+  },
+  "k3": {
+    "thumb": "https://images.pexels.com/photos/7780792/pexels-photo-7780792.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/7780792/pexels-photo-7780792.jpeg?auto=compress&w=1600"
+  },
+  "k4": {
+    "thumb": "https://images.pexels.com/photos/170849/pexels-photo-170849.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/170849/pexels-photo-170849.jpeg?auto=compress&w=1600"
+  },
+  "k5": {
+    "thumb": "https://images.pexels.com/photos/17026884/free-photo-of-a-bun-with-ham-and-fried-egg.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/17026884/free-photo-of-a-bun-with-ham-and-fried-egg.jpeg?auto=compress&w=1600"
+  },
+  "k6": {
+    "thumb": "https://images.pexels.com/photos/12737656/pexels-photo-12737656.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/12737656/pexels-photo-12737656.jpeg?auto=compress&w=1600"
+  },
+  "k7": {
+    "thumb": "https://images.pexels.com/photos/12737817/pexels-photo-12737817.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/12737817/pexels-photo-12737817.jpeg?auto=compress&w=1600"
+  },
+  "k8": {
+    "thumb": "https://images.pexels.com/photos/20642812/free-photo-of-rice-with-chicken.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/20642812/free-photo-of-rice-with-chicken.jpeg?auto=compress&w=1600"
+  },
+  "k9": {
+    "thumb": "https://images.pexels.com/photos/23830980/free-photo-of-close-up-of-a-dish-with-rice-and-chicken.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/23830980/free-photo-of-close-up-of-a-dish-with-rice-and-chicken.jpeg?auto=compress&w=1600"
+  },
+  "k10": {
+    "thumb": "https://images.pexels.com/photos/35287415/free-photo-of-delicious-indian-biryani-with-raita-and-salad.jpeg?auto=compress&w=600",
+    "full": "https://images.pexels.com/photos/35287415/free-photo-of-delicious-indian-biryani-with-raita-and-salad.jpeg?auto=compress&w=1600"
+  }
+};
+    const photoViewer = document.getElementById("photoViewer");
+    const photoViewerImage = document.getElementById("photoViewerImage");
+    const photoCaption = document.getElementById("photoCaption");
+    function openFoodPhoto(item, url) {
+      photoViewerImage.src = url;
+      photoViewerImage.alt = item.name;
+      photoCaption.textContent = item.name + " — Quetta Hotel & Delivery";
+      photoViewer.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+    function closeFoodPhoto() {
+      photoViewer.classList.remove("open");
+      photoViewerImage.src = "";
+      document.body.style.overflow = "";
+    }
+    document.getElementById("photoClose").addEventListener("click", closeFoodPhoto);
+    photoViewer.addEventListener("click", event => { if (event.target === photoViewer) closeFoodPhoto(); });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") closeFoodPhoto(); });
+
     const menuContainer = document.getElementById("menuContainer");
     const totalElement = document.getElementById("totalAmount");
     const summaryElement = document.getElementById("orderSummary");
@@ -150,11 +290,19 @@
         price.className = "item-price";
         price.textContent = "Rs. " + item.price;
         details.append(name, price);
-        const photo = document.createElement("div");
+        const photo = document.createElement("button");
+        photo.type = "button";
         photo.className = "food-photo";
-        photo.setAttribute("aria-hidden", "true");
-        const tile = imageTiles[item.id] || [0,0];
-        photo.style.backgroundPosition = (tile[0] * 25) + "% " + (tile[1] * 20) + "%";
+        photo.setAttribute("aria-label", "View full photo of " + item.name);
+        const photoImage = document.createElement("img");
+        const photoData = imageUrls[item.id];
+        photoImage.src = photoData ? photoData.thumb : "";
+        photoImage.dataset.full = photoData ? photoData.full : "";
+        photoImage.alt = item.name;
+        photoImage.loading = "lazy";
+        photoImage.decoding = "async";
+        photoImage.addEventListener("click", () => openFoodPhoto(item, photoImage.dataset.full));
+        photo.appendChild(photoImage);
         info.append(photo, checkbox, details);
         const qty = document.createElement("input");
         qty.type = "number";
