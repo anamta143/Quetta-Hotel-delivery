@@ -3,18 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Quetta Hotel & Delivery — order tea, parathas and food in Gujranwala.">
+  <meta name="description" content="Quetta Hotel in Gujranwala. Explore chai, parathas and meals, view menu prices, and place your delivery order easily on WhatsApp.">
   <meta name="theme-color" content="#14251f">
-  <title>Quetta Hotel &amp; Delivery | Gujranwala</title>
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Quetta Hotel | Chai, Parathay & Food Delivery">
+  <meta property="og:description" content="Explore our menu and order chai, parathas and food on WhatsApp.">
+  <meta property="og:url" content="https://anamta143.github.io/Quetta-Hotel-delivery/">
+  <meta property="og:image" content="https://anamta143.github.io/Quetta-Hotel-delivery/images/quetta-hotel-hero.webp">
+  <title>Quetta Hotel | Chai, Parathay &amp; Food Delivery in Gujranwala</title>
   <style>
     :root{--ink:#17231f;--green:#176b45;--gold:#f4c542;--paper:#f6f7f4;--muted:#68736d;--line:#e4e9e4}
     *{box-sizing:border-box}
     body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-    header{background:linear-gradient(135deg,#14251f,#244b38);color:#fff;text-align:center;padding:30px 16px 26px}
-    .brand-mark{display:inline-block;border:1px solid #ffffff55;border-radius:999px;padding:5px 12px;color:var(--gold);font-size:12px;letter-spacing:1.5px;text-transform:uppercase}
-    header h1{margin:12px 0 5px;font-size:clamp(25px,6vw,34px);color:var(--gold)}
-    header p{margin:0;color:#e3eee7;font-size:14px}
-    .container{width:min(680px,100%);margin:20px auto;padding:0 14px 36px}
+    .site-header{background:#10251d;color:#fff;min-height:76px;padding:12px clamp(16px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--gold)}
+    .brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;white-space:nowrap}.brand-icon{font-size:34px}.brand strong{display:block;font-size:23px;line-height:1.1}.brand em{font-style:normal;color:var(--gold)}.brand small{display:block;font-size:10px;letter-spacing:2px;color:#d5e3d9;margin-top:4px}
+    .main-nav{display:flex;align-items:center;gap:clamp(12px,2.5vw,30px)}.main-nav a{color:#f3f6f3;text-decoration:none;font-size:14px;font-weight:650}.main-nav a:hover{color:var(--gold)}
+    .nav-order,.primary-action,.secondary-action{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:800;border-radius:999px;padding:12px 19px}.nav-order{background:#16834a;color:white;white-space:nowrap}
+    .hero{background:linear-gradient(120deg,#10251d,#1b4835);display:grid;grid-template-columns:1fr 1fr;min-height:390px;overflow:hidden}
+    .hero-copy{padding:clamp(28px,5vw,64px);align-self:center;color:white}.eyebrow{display:inline-block;color:var(--gold);font-size:11px;font-weight:850;letter-spacing:2px}
+    .hero-copy h1{font-size:clamp(34px,5vw,58px);line-height:1.04;margin:15px 0;color:white}.hero-copy h1 span{color:var(--gold)}.hero-copy p{max-width:490px;color:#e0ebe4;font-size:16px;line-height:1.7}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}.primary-action{background:var(--gold);color:#17231f}.secondary-action{border:1px solid #ffffff80;color:white}.hero-note{display:flex;gap:18px;flex-wrap:wrap;margin-top:25px;color:#e4eee7;font-size:12px;font-weight:650}
+    .hero-photo{min-height:390px;position:relative}.hero-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#10251d22,transparent 30%);pointer-events:none}.hero-photo img{width:100%;height:100%;min-height:390px;display:block;object-fit:cover;object-position:48% center}
+    .welcome-strip{display:flex;justify-content:space-evenly;gap:12px;flex-wrap:wrap;padding:15px;background:#f0f5ef;color:#244b38;font-size:13px;font-weight:750;text-align:center;border-bottom:1px solid var(--line)}
+    .container{width:min(760px,100%);margin:24px auto;padding:0 14px 36px}
     .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 18px #17231f0a}
     h2,h3{margin:0 0 14px}
     h2{font-size:20px}h3{font-size:17px}
@@ -44,22 +56,42 @@
     .summary{font-size:13px;line-height:1.7;color:#34443b;white-space:pre-line;margin-top:12px}
     .error{color:#b42318;font-size:13px;margin-top:10px;min-height:18px}
     footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 24px}
+
+    .about-card{display:flex;align-items:center;justify-content:space-between;gap:22px;background:#10251d;color:white;border-radius:16px;padding:24px;margin:18px 0}.about-card h2{margin:8px 0;color:#fff}.about-card p{color:#dbe8df;line-height:1.65;margin:0}.about-card a{flex-shrink:0;color:#17231f;background:var(--gold);padding:12px 17px;border-radius:999px;text-decoration:none;font-weight:800}
+    footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;text-align:left;color:var(--muted);font-size:12px;padding:18px 4px 24px}
+    @media(max-width:720px){.site-header{flex-wrap:wrap;justify-content:space-between}.main-nav{order:3;width:100%;justify-content:space-between;border-top:1px solid #ffffff22;padding-top:10px}.main-nav a{font-size:13px}.nav-order{font-size:12px;padding:10px 13px}.hero{grid-template-columns:1fr}.hero-copy{padding:34px 22px 26px}.hero-photo{min-height:260px;height:260px;grid-row:1}.hero-photo img{min-height:260px}.hero-copy h1{font-size:39px}.welcome-strip{font-size:12px}.about-card{display:block}.about-card a{display:inline-flex;margin-top:16px}}
+    @media(max-width:380px){.brand strong{font-size:20px}.brand-icon{font-size:28px}.nav-order{font-size:11px;padding:9px 10px}.main-nav a{font-size:12px}}
+
   </style>
 </head>
 <body>
-  <header>
-    <span class="brand-mark">Gujranwala</span>
-    <h1>Quetta Hotel &amp; Delivery</h1>
-    <p>Chai, Parathay aur Khana — order karein WhatsApp par</p>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Quetta Hotel home"><span class="brand-icon" aria-hidden="true">☕</span><span><strong>Quetta <em>Hotel</em></strong><small>CHAI · FOOD · DELIVERY</small></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#home">Home</a><a href="#menu">Menu</a><a href="#about">About</a><a href="#contact">Contact</a>
+    </nav>
+    <a class="nav-order" href="#order">Order on WhatsApp</a>
   </header>
-  <main class="container">
-    <section class="card">
-      <h2>Our Menu</h2>
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <span class="eyebrow">WELCOME TO QUETTA HOTEL</span>
+        <h1>Har cup mein <span>Quetta ka taste.</span></h1>
+        <p>Garam chai, mazaydar parathay aur pasandeeda khanay — apna order asaani se WhatsApp par bhejein.</p>
+        <div class="hero-actions"><a class="primary-action" href="#menu">Explore Menu</a><a class="secondary-action" href="#order">Order Now ↗</a></div>
+        <div class="hero-note"><span>☕ Fresh chai</span><span>🥘 Desi food</span><span>🛵 Delivery</span></div>
+      </div>
+      <div class="hero-photo"><img src="images/quetta-hotel-hero.webp" alt="A tea maker pouring steaming chai beside freshly prepared paratha" fetchpriority="high"></div>
+    </section>
+    <section class="welcome-strip" aria-label="Our service"><span>Freshly prepared favourites</span><span>Easy WhatsApp ordering</span><span>Delivery charges confirmed with your order</span></section>
+  <div class="container">
+    <section class="card" id="menu">
+      <h2>Explore Our Menu</h2>
       <p class="intro">Apni pasand ki items select karein aur quantity choose karein.</p>
       <div id="menuContainer"></div>
     </section>
-    <section class="card">
-      <h3>Customer Details</h3>
+    <section class="card" id="contact">
+      <h3>Delivery Details</h3>
       <label for="custName">Name</label>
       <input type="text" id="custName" autocomplete="name" placeholder="Apna pura naam likhein" maxlength="80">
       <label for="custPhone">Phone Number</label>
@@ -67,14 +99,16 @@
       <label for="custAddress">Complete Delivery Address</label>
       <textarea id="custAddress" rows="3" autocomplete="street-address" placeholder="Ghar ka pura pata likhein" maxlength="400"></textarea>
     </section>
-    <section class="card">
+    <section class="card" id="order">
       <div class="total-section"><span>Order Total</span><span>Rs. <span id="totalAmount">0</span></span></div>
       <div id="orderSummary" class="summary" aria-live="polite">Abhi koi item select nahi ki gayi.</div>
       <button class="whatsapp-btn" type="button" id="orderButton">Order on WhatsApp</button>
       <div id="formError" class="error" role="alert"></div>
       <p class="note">Minimum order Rs. 300. Delivery charges alag honge aur order confirm karte waqt bataye jayenge.</p>
     </section>
-    <footer>Quetta Hotel &amp; Delivery · Gujranwala</footer>
+    <section class="about-card" id="about"><div><span class="eyebrow">ABOUT US</span><h2>Simple food. Warm chai. Easy ordering.</h2><p>Welcome to Quetta Hotel. Browse the menu, choose your favourites and send your order directly through WhatsApp. Delivery charges are confirmed when your order is placed.</p></div><a href="#menu">Browse Menu ↗</a></section>
+    <footer>© <span id="year"></span> Quetta Hotel · Gujranwala <span>Made for chai &amp; food lovers</span></footer>
+  </div>
   </main>
   <div id="photoViewer" class="photo-viewer" role="dialog" aria-modal="true" aria-label="Food photo preview">
     <button class="photo-close" id="photoClose" type="button" aria-label="Close photo">×</button>
@@ -417,6 +451,7 @@
     }
 
     orderButton.addEventListener("click", sendWhatsApp);
+    document.getElementById("year").textContent = new Date().getFullYear();
     renderMenu();
     updateOrder();
   </script>
