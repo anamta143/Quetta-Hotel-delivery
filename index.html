@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Quetta Hotel & Delivery — order tea, parathas and food in Gujranwala.">
+  <meta name="theme-color" content="#14251f">
+  <title>Quetta Hotel &amp; Delivery | Gujranwala</title>
+  <style>
+    :root{--ink:#17231f;--green:#176b45;--gold:#f4c542;--paper:#f6f7f4;--muted:#68736d;--line:#e4e9e4}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+    header{background:linear-gradient(135deg,#14251f,#244b38);color:#fff;text-align:center;padding:30px 16px 26px}
+    .brand-mark{display:inline-block;border:1px solid #ffffff55;border-radius:999px;padding:5px 12px;color:var(--gold);font-size:12px;letter-spacing:1.5px;text-transform:uppercase}
+    header h1{margin:12px 0 5px;font-size:clamp(25px,6vw,34px);color:var(--gold)}
+    header p{margin:0;color:#e3eee7;font-size:14px}
+    .container{width:min(680px,100%);margin:20px auto;padding:0 14px 36px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 18px #17231f0a}
+    h2,h3{margin:0 0 14px}
+    h2{font-size:20px}h3{font-size:17px}
+    .intro{font-size:13px;color:var(--muted);margin:-7px 0 14px}
+    .category-title{display:block;background:#edf5ef;color:var(--green);font-weight:800;padding:9px 12px;border-radius:9px;margin:18px 0 5px}
+    .menu-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 2px;border-bottom:1px solid var(--line)}
+    .item-info{display:flex;align-items:center;gap:10px;min-width:0}
+    .item-info input{width:19px;height:19px;accent-color:var(--green);flex-shrink:0}
+    .item-name{font-weight:650;font-size:14px}
+    .item-price{font-size:13px;color:var(--green);font-weight:750;margin-top:3px}
+    .qty-input{width:66px;padding:9px 5px;border:1px solid #cbd5ce;border-radius:8px;text-align:center;font-size:16px}
+    .qty-input:disabled{background:#f1f3f1;color:#999}
+    label{display:block;font-weight:650;font-size:13px;margin:13px 0 6px}
+    input[type=text],input[type=tel],textarea{width:100%;padding:12px;border:1px solid #cbd5ce;border-radius:9px;font:inherit;font-size:15px;background:#fff}
+    input:focus,textarea:focus{outline:2px solid #176b4533;border-color:var(--green)}
+    .total-section{display:flex;justify-content:space-between;align-items:center;background:#f0f6f1;padding:15px;border-radius:10px;font-size:18px;font-weight:800}
+    .note{font-size:12px;color:var(--muted);line-height:1.5;margin:12px 2px 0}
+    .whatsapp-btn{width:100%;border:0;border-radius:10px;background:#16834a;color:#fff;padding:15px;font-size:16px;font-weight:800;margin-top:16px;cursor:pointer}
+    .whatsapp-btn:active{transform:scale(.99)}
+    .summary{font-size:13px;line-height:1.7;color:#34443b;white-space:pre-line;margin-top:12px}
+    .error{color:#b42318;font-size:13px;margin-top:10px;min-height:18px}
+    footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 12px 24px}
+  </style>
+</head>
+<body>
+  <header>
+    <span class="brand-mark">Gujranwala</span>
+    <h1>Quetta Hotel &amp; Delivery</h1>
+    <p>Chai, Parathay aur Khana — order karein WhatsApp par</p>
+  </header>
+  <main class="container">
+    <section class="card">
+      <h2>Our Menu</h2>
+      <p class="intro">Apni pasand ki items select karein aur quantity choose karein.</p>
+      <div id="menuContainer"></div>
+    </section>
+    <section class="card">
+      <h3>Customer Details</h3>
+      <label for="custName">Name</label>
+      <input type="text" id="custName" autocomplete="name" placeholder="Apna pura naam likhein" maxlength="80">
+      <label for="custPhone">Phone Number</label>
+      <input type="tel" id="custPhone" autocomplete="tel" inputmode="tel" placeholder="03XX-XXXXXXX" maxlength="20">
+      <label for="custAddress">Complete Delivery Address</label>
+      <textarea id="custAddress" rows="3" autocomplete="street-address" placeholder="Ghar ka pura pata likhein" maxlength="400"></textarea>
+    </section>
+    <section class="card">
+      <div class="total-section"><span>Order Total</span><span>Rs. <span id="totalAmount">0</span></span></div>
+      <div id="orderSummary" class="summary" aria-live="polite">Abhi koi item select nahi ki gayi.</div>
+      <button class="whatsapp-btn" type="button" id="orderButton">Order on WhatsApp</button>
+      <div id="formError" class="error" role="alert"></div>
+      <p class="note">Minimum order Rs. 300. Delivery charges alag honge aur order confirm karte waqt bataye jayenge.</p>
+    </section>
+    <footer>Quetta Hotel &amp; Delivery · Gujranwala</footer>
+  </main>
+  <script>
+    const MY_WHATSAPP_NUMBER = "923442440747";
+    const menuData = [
+            // Chai Point
+            { id: "c1", category: "Chai Point", name: "Koyla Chai", price: 60 },
+            { id: "c2", category: "Chai Point", name: "Malai Chai", price: 80 },
+            { id: "c3", category: "Chai Point", name: "Shakar Chai", price: 80 },
+            { id: "c4", category: "Chai Point", name: "Special Chai", price: 90 },
+            { id: "c5", category: "Chai Point", name: "Special Koyla Chai", price: 90 },
+            { id: "c6", category: "Chai Point", name: "Kashmiri Chai", price: 150 },
+            { id: "c7", category: "Chai Point", name: "Pani", price: 150 }, 
+            { id: "c8", category: "Chai Point", name: "Green Tea", price: 60 },
+            { id: "c9", category: "Chai Point", name: "Black Tea", price: 60 },
+            { id: "c10", category: "Chai Point", name: "Chha", price: 80 },
+            
+            // Paratha Point
+            { id: "p1", category: "Paratha Point", name: "Sada Paratha", price: 60 },
+            { id: "p2", category: "Paratha Point", name: "Aloo Paratha", price: 130 },
+            { id: "p3", category: "Paratha Point", name: "Aloo Cheese Paratha", price: 200 },
+            { id: "p4", category: "Paratha Point", name: "Chicken Paratha", price: 220 },
+            { id: "p5", category: "Paratha Point", name: "Chicken Cheese Paratha", price: 300 },
+            { id: "p6", category: "Paratha Point", name: "Sada Aanda Paratha", price: 150 },
+            { id: "p7", category: "Paratha Point", name: "Malai Paratha", price: 130 },
+            { id: "p8", category: "Paratha Point", name: "Palak Paratha", price: 200 },
+            { id: "p9", category: "Paratha Point", name: "Shehed Paratha", price: 200 },
+            { id: "p10", category: "Paratha Point", name: "Shakar Paratha", price: 120 },
+
+            // Khana Point
+            { id: "k1", category: "Khana Point", name: "Chicken Paratha (Khana)", price: 120 },
+            { id: "k2", category: "Khana Point", name: "Anda Paratha (Khana)", price: 120 },
+            { id: "k3", category: "Khana Point", name: "Anda (Single)", price: 60 },
+            { id: "k4", category: "Khana Point", name: "Anda Omelette", price: 60 },
+            { id: "k5", category: "Khana Point", name: "Anda Bun Fry", price: 60 },
+            { id: "k6", category: "Khana Point", name: "Sada Biryani Half", price: 120 },
+            { id: "k7", category: "Khana Point", name: "Sada Biryani Full", price: 200 },
+            { id: "k8", category: "Khana Point", name: "Chicken Biryani Half", price: 150 },
+            { id: "k9", category: "Khana Point", name: "Chicken Biryani Full", price: 250 },
+            { id: "k10", category: "Khana Point", name: "Raita", price: 30 }
+        ];
+    const menuContainer = document.getElementById("menuContainer");
+    const totalElement = document.getElementById("totalAmount");
+    const summaryElement = document.getElementById("orderSummary");
+    const errorElement = document.getElementById("formError");
+    const orderButton = document.getElementById("orderButton");
+
+    function renderMenu() {
+      let currentCategory = "";
+      menuData.forEach((item) => {
+        if (item.category !== currentCategory) {
+          currentCategory = item.category;
+          const heading = document.createElement("div");
+          heading.className = "category-title";
+          heading.textContent = currentCategory;
+          menuContainer.appendChild(heading);
+        }
+        const row = document.createElement("div");
+        row.className = "menu-item";
+        const info = document.createElement("div");
+        info.className = "item-info";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = item.id;
+        checkbox.dataset.name = item.name;
+        checkbox.dataset.price = String(item.price);
+        checkbox.setAttribute("aria-label", "Select " + item.name);
+        const details = document.createElement("div");
+        const name = document.createElement("div");
+        name.className = "item-name";
+        name.textContent = item.name;
+        const price = document.createElement("div");
+        price.className = "item-price";
+        price.textContent = "Rs. " + item.price;
+        details.append(name, price);
+        info.append(checkbox, details);
+        const qty = document.createElement("input");
+        qty.type = "number";
+        qty.id = "qty_" + item.id;
+        qty.className = "qty-input";
+        qty.value = "1";
+        qty.min = "1";
+        qty.max = "99";
+        qty.step = "1";
+        qty.inputMode = "numeric";
+        qty.disabled = true;
+        qty.setAttribute("aria-label", item.name + " quantity");
+        checkbox.addEventListener("change", () => {
+          qty.disabled = !checkbox.checked;
+          if (!checkbox.checked) qty.value = "1";
+          updateOrder();
+        });
+        qty.addEventListener("input", updateOrder);
+        row.append(info, qty);
+        menuContainer.appendChild(row);
+      });
+    }
+
+    function getSelectedItems() {
+      const selected = [];
+      menuData.forEach((item) => {
+        const checkbox = document.getElementById(item.id);
+        const qtyInput = document.getElementById("qty_" + item.id);
+        if (checkbox && checkbox.checked) {
+          const quantity = Number(qtyInput.value);
+          if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
+            selected.push({ ...item, quantity: NaN, lineTotal: NaN });
+          } else {
+            selected.push({ ...item, quantity, lineTotal: item.price * quantity });
+          }
+        }
+      });
+      return selected;
+    }
+
+    function updateOrder() {
+      const selected = getSelectedItems();
+      const valid = selected.filter(item => Number.isFinite(item.lineTotal));
+      const total = valid.reduce((sum, item) => sum + item.lineTotal, 0);
+      totalElement.textContent = String(total);
+      if (selected.length === 0) {
+        summaryElement.textContent = "Abhi koi item select nahi ki gayi.";
+      } else if (valid.length !== selected.length) {
+        summaryElement.textContent = "Quantity 1 se 99 ke darmiyan honi chahiye.";
+      } else {
+        summaryElement.textContent = valid.map(item =>
+          item.quantity + " x " + item.name + " — Rs. " + item.lineTotal
+        ).join("\n");
+      }
+      return { selected, total, valid };
+    }
+
+    function sendWhatsApp() {
+      errorElement.textContent = "";
+      const { selected, total, valid } = updateOrder();
+      if (selected.length === 0) {
+        errorElement.textContent = "Baraye meharbani kam az kam ek item select karein.";
+        return;
+      }
+      if (valid.length !== selected.length) {
+        errorElement.textContent = "Har selected item ki quantity 1 se 99 ke darmiyan honi chahiye.";
+        return;
+      }
+      if (total < 300) {
+        errorElement.textContent = "Minimum order Rs. 300 hai.";
+        return;
+      }
+      const name = document.getElementById("custName").value.trim();
+      const phone = document.getElementById("custPhone").value.trim();
+      const address = document.getElementById("custAddress").value.trim();
+      const phoneDigits = phone.replace(/[\s()+-]/g, "");
+      if (!name || !phone || !address) {
+        errorElement.textContent = "Naam, phone number aur complete address zaroor likhein.";
+        return;
+      }
+      if (!/^(03\d{9}|923\d{9})$/.test(phoneDigits)) {
+        errorElement.textContent = "Meharbani karke valid Pakistani mobile number likhein.";
+        return;
+      }
+      const orderLines = valid.map(item =>
+        "- " + item.quantity + " x " + item.name + " = Rs. " + item.lineTotal
+      ).join("\n");
+      const message = [
+        "*NEW ORDER — QUETTA HOTEL & DELIVERY*",
+        "",
+        "*Customer Details*",
+        "Name: " + name,
+        "Phone: " + phone,
+        "Address: " + address,
+        "",
+        "*Order Details*",
+        orderLines,
+        "",
+        "*Grand Total: Rs. " + total + "*",
+        "Delivery charges: To be confirmed",
+        "Payment: Cash on Delivery"
+      ].join("\n");
+      const whatsappURL = "https://wa.me/" + MY_WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+      window.open(whatsappURL, "_blank", "noopener,noreferrer");
+    }
+
+    orderButton.addEventListener("click", sendWhatsApp);
+    renderMenu();
+    updateOrder();
+  </script>
+</body>
+</html>
