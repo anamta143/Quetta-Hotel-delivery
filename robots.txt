@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://anamta143.github.io/Quetta-Hotel-delivery/sitemap.xml
