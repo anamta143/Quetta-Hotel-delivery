@@ -23,6 +23,7 @@
     .menu-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 2px;border-bottom:1px solid var(--line)}
     .item-info{display:flex;align-items:center;gap:10px;min-width:0}
     .item-info input{width:19px;height:19px;accent-color:var(--green);flex-shrink:0}
+    .food-photo{width:54px;height:54px;flex:0 0 54px;border-radius:10px;background-image:url("assets/food-sprite.webp");background-size:500% 600%;background-repeat:no-repeat;background-color:#eef1ed;box-shadow:0 1px 4px #17231f18}
     .item-name{font-weight:650;font-size:14px}
     .item-price{font-size:13px;color:var(--green);font-weight:750;margin-top:3px}
     .qty-input{width:66px;padding:9px 5px;border:1px solid #cbd5ce;border-radius:8px;text-align:center;font-size:16px}
@@ -107,6 +108,14 @@
             { id: "k9", category: "Khana Point", name: "Chicken Biryani Full", price: 250 },
             { id: "k10", category: "Khana Point", name: "Raita", price: 30 }
         ];
+    const imageTiles = {
+      c1:[0,0],c2:[1,0],c3:[2,0],c4:[3,0],c5:[4,0],
+      c6:[0,1],c7:[1,1],c8:[2,1],c9:[3,1],c10:[3,1],
+      p1:[4,1],p2:[0,2],p3:[1,2],p4:[0,4],p5:[3,2],p6:[4,2],
+      p7:[0,3],p8:[1,3],p9:[2,3],p10:[3,3],
+      k1:[0,4],k2:[4,3],k3:[1,4],k4:[2,4],k5:[3,4],k6:[4,4],
+      k7:[0,5],k8:[1,5],k9:[2,5],k10:[3,5]
+    };
     const menuContainer = document.getElementById("menuContainer");
     const totalElement = document.getElementById("totalAmount");
     const summaryElement = document.getElementById("orderSummary");
@@ -141,7 +150,12 @@
         price.className = "item-price";
         price.textContent = "Rs. " + item.price;
         details.append(name, price);
-        info.append(checkbox, details);
+        const photo = document.createElement("div");
+        photo.className = "food-photo";
+        photo.setAttribute("aria-hidden", "true");
+        const tile = imageTiles[item.id] || [0,0];
+        photo.style.backgroundPosition = (tile[0] * 25) + "% " + (tile[1] * 20) + "%";
+        info.append(photo, checkbox, details);
         const qty = document.createElement("input");
         qty.type = "number";
         qty.id = "qty_" + item.id;
