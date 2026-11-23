@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kota Hotel Delivery - Gujranwala</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #1a252f; color: white; text-align: center; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        header h1 { margin: 0; font-size: 24px; color: #f1c40f; }
+        header p { margin: 5px 0 0; font-size: 14px; opacity: 0.9; }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        
+        .category-title { background: #e74c3c; color: white; padding: 8px 15px; border-radius: 5px; margin: 15px 0 10px; font-size: 16px; display: inline-block; }
+        
+        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #ccc; }
+        .menu-item:last-child { border-bottom: none; }
+        .item-info { display: flex; align-items: center; gap: 10px; }
+        .item-name { font-weight: bold; font-size: 15px; }
+        .item-price { color: #27ae60; font-weight: bold; font-size: 14px; }
+        .qty-input { width: 45px; padding: 6px; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-weight: bold; }
+        
+        .customer-details label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; color: #555; margin-top: 10px; }
+        .customer-details input, .customer-details textarea { width: 100%; padding: 10px; margin-bottom: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
+        
+        .total-section { background: #ecf0f1; padding: 15px; border-radius: 5px; margin-top: 15px; text-align: right; font-size: 20px; font-weight: bold; border-left: 5px solid #27ae60; color: #2c3e50;}
+        .whatsapp-btn { display: block; width: 100%; background-color: #25D366; color: white; text-align: center; padding: 15px; font-size: 18px; font-weight: bold; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer; text-decoration: none; box-sizing: border-box; box-shadow: 0 4px 6px rgba(37, 211, 102, 0.3); }
+        .whatsapp-btn:hover { background-color: #128C7E; }
+        .note { font-size: 13px; color: #e74c3c; text-align: center; margin-top: 10px; font-weight: bold;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Kota Hotel Delivery</h1>
+        <p>Gujranwala ki Mashhoor Quetta Hotel ki Chai</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2 style="text-align:center; margin-top:0; color:#1a252f;">Menu</h2>
+            <div id="menuContainer">
+                <!-- Menu items JavaScript se load honge -->
+            </div>
+        </div>
+
+        <div class="card customer-details">
+            <h3 style="margin-top:0; color:#1a252f;">Aapki Details</h3>
+            <label>Naam:</label>
+            <input type="text" id="custName" placeholder="Apna pura naam likhein">
+            
+            <label>Phone Number:</label>
+            <input type="tel" id="custPhone" placeholder="03XX-XXXXXXX">
+            
+            <label>Complete Address:</label>
+            <textarea id="custAddress" rows="2" placeholder="Ghar ka pura pata ya Google Maps location paste karein"></textarea>
+        </div>
+
+        <div class="card" style="margin-bottom: 50px;">
+            <div class="total-section">
+                Total: Rs. <span id="totalAmount">0</span>
+            </div>
+            <button class="whatsapp-btn" onclick="sendWhatsApp()">Order on WhatsApp</button>
+            <div class="note">Minimum order Rs. 300. Delivery charges alag honge.</div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // AAPKA WHATSAPP NUMBER SET HO CHUKA HAI
+        // ==========================================
+        const MY_WHATSAPP_NUMBER = "923442440747"; 
+
+        // ==========================================
+        // MENU DATA (Tasveer se banaya gaya hai)
+        // ==========================================
+        const menuData = [
+            // Chai Point
+            { id: "c1", category: "Chai Point", name: "Koyla Chai", price: 60 },
+            { id: "c2", category: "Chai Point", name: "Malai Chai", price: 80 },
+            { id: "c3", category: "Chai Point", name: "Shakar Chai", price: 80 },
+            { id: "c4", category: "Chai Point", name: "Special Chai", price: 90 },
+            { id: "c5", category: "Chai Point", name: "Special Koyla Chai", price: 90 },
+            { id: "c6", category: "Chai Point", name: "Kashmiri Chai", price: 150 },
+            { id: "c7", category: "Chai Point", name: "Pani", price: 150 }, 
+            { id: "c8", category: "Chai Point", name: "Green Tea", price: 60 },
+            { id: "c9", category: "Chai Point", name: "Black Tea", price: 60 },
+            { id: "c10", category: "Chai Point", name: "Chha", price: 80 },
+            
+            // Paratha Point
+            { id: "p1", category: "Paratha Point", name: "Sada Paratha", price: 60 },
+            { id: "p2", category: "Paratha Point", name: "Aloo Paratha", price: 130 },
+            { id: "p3", category: "Paratha Point", name: "Aloo Cheese Paratha", price: 200 },
+            { id: "p4", category: "Paratha Point", name: "Chicken Paratha", price: 220 },
+            { id: "p5", category: "Paratha Point", name: "Chicken Cheese Paratha", price: 300 },
+            { id: "p6", category: "Paratha Point", name: "Sada Aanda Paratha", price: 150 },
+            { id: "p7", category: "Paratha Point", name: "Malai Paratha", price: 130 },
+            { id: "p8", category: "Paratha Point", name: "Palak Paratha", price: 200 },
+            { id: "p9", category: "Paratha Point", name: "Shehed Paratha", price: 200 },
+            { id: "p10", category: "Paratha Point", name: "Shakar Paratha", price: 120 },
+
+            // Khana Point
+            { id: "k1", category: "Khana Point", name: "Chicken Paratha (Khana)", price: 120 },
+            { id: "k2", category: "Khana Point", name: "Anda Paratha (Khana)", price: 120 },
+            { id: "k3", category: "Khana Point", name: "Anda (Single)", price: 60 },
+            { id: "k4", category: "Khana Point", name: "Anda Omelette", price: 60 },
+            { id: "k5", category: "Khana Point", name: "Anda Bun Fry", price: 60 },
+            { id: "k6", category: "Khana Point", name: "Sada Biryani Half", price: 120 },
+            { id: "k7", category: "Khana Point", name: "Sada Biryani Full", price: 200 },
+            { id: "k8", category: "Khana Point", name: "Chicken Biryani Half", price: 150 },
+            { id: "k9", category: "Khana Point", name: "Chicken Biryani Full", price: 250 },
+            { id: "k10", category: "Khana Point", name: "Raita", price: 30 }
+        ];
+
+        window.onload = function() {
+            renderMenu();
+        };
+
+        function renderMenu() {
+            const menuContainer = document.getElementById('menuContainer');
+            menuContainer.innerHTML = ""; 
+            
+            let currentCategory = "";
+
+            menuData.forEach(item => {
+                if (item.category !== currentCategory) {
+                    currentCategory = item.category;
+                    menuContainer.innerHTML += `<div class="category-title">${currentCategory}</div>`;
+                }
+
+                const itemHTML = `
+                    <div class="menu-item">
+                        <div class="item-info">
+                            <input type="checkbox" id="${item.id}" data-name="${item.name}" data-price="${item.price}" onchange="toggleItem(this)">
+                            <div>
+                                <div class="item-name">${item.name}</div>
+                                <div class="item-price">Rs. ${item.price}</div>
+                            </div>
+                        </div>
+                        <input type="number" id="qty_${item.id}" class="qty-input" value="1" min="1" disabled onchange="calculateTotal()">
+                    </div>
+                `;
+                menuContainer.innerHTML += itemHTML;
+            });
+        }
+
+        function toggleItem(checkbox) {
+            const qtyInput = checkbox.parentElement.nextElementSibling;
+            qtyInput.disabled = !checkbox.checked;
+            if (!checkbox.checked) {
+                qtyInput.value = 1;
+            }
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            const items = document.querySelectorAll('.menu-item');
+            
+            items.forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                const qtyInput = item.querySelector('.qty-input');
+                
+                if (checkbox && checkbox.checked) {
+                    const price = parseInt(checkbox.getAttribute('data-price'));
+                    total += price * parseInt(qtyInput.value);
+                }
+            });
+
+            document.getElementById('totalAmount').innerText = total;
+        }
+
+        function sendWhatsApp() {
+            const total = parseInt(document.getElementById('totalAmount').innerText);
+            
+            if (total === 0) {
+                alert("Baraye meharbani kam az kam ek item select karein.");
+                return;
+            }
+
+            if (total < 300) {
+                alert("Minimum order Rs. 300 hai. Baraye meharbani mazeed items select karein.");
+                return;
+            }
+
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+
+            if (!name || !phone || !address) {
+                alert("Baraye meharbani apna Naam, Phone aur Address mukammal likhein.");
+                return;
+            }
+
+            let orderDetails = "";
+            const items = document.querySelectorAll('.menu-item');
+            
+            items.forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                const qtyInput = item.querySelector('.qty-input');
+                
+                if (checkbox && checkbox.checked) {
+                    const itemName = checkbox.getAttribute('data-name');
+                    const price = checkbox.getAttribute('data-price');
+                    const qty = qtyInput.value;
+                    const itemTotal = price * qty;
+                    orderDetails += `- ${qty} x ${itemName} = Rs. ${itemTotal}%0A`;
+                }
+            });
+
+            const message = `*NEW ORDER - Kota Hotel Delivery*%0A%0A*Customer Details:*%0ANaam: ${name}%0APhone: ${phone}%0AAddress: ${address}%0A%0A*Order Details:*%0A${orderDetails}%0A*Grand Total: Rs. ${total}*%0A%0A_(Payment Cash on Delivery)_`;
+
+            const whatsappURL = `https://wa.me/${MY_WHATSAPP_NUMBER}?text=${message}`;
+            window.open(whatsappURL, '_blank');
+        }
+    </script>
+
+</body>
+</html>
