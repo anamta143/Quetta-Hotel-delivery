@@ -441,11 +441,21 @@
         errorElement.textContent = "Meharbani karke valid Pakistani mobile number likhein.";
         return;
       }
+      const now = new Date();
+      const datePart = now.getFullYear().toString() +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        String(now.getDate()).padStart(2, "0");
+      const timePart = String(now.getHours()).padStart(2, "0") +
+        String(now.getMinutes()).padStart(2, "0") +
+        String(now.getSeconds()).padStart(2, "0");
+      const randomPart = Math.floor(1000 + Math.random() * 9000);
+      const orderNumber = "QH-" + datePart + "-" + timePart + "-" + randomPart;
       const orderLines = valid.map(item =>
         "- " + item.quantity + " x " + item.name + " = Rs. " + item.lineTotal
       ).join("\n");
       const message = [
         "*NEW ORDER — QUETTA HOTEL & DELIVERY*",
+        "*ORDER NUMBER: " + orderNumber + "*",
         "",
         "*Customer Details*",
         "Name: " + name,
@@ -461,7 +471,8 @@
         "Payment: Cash on Delivery"
       ].join("\n");
       const whatsappURL = "https://wa.me/" + MY_WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
-      window.open(whatsappURL, "_blank", "noopener,noreferrer");
+      // Same-tab navigation avoids Android browsers blocking the WhatsApp hand-off as a popup.
+      window.location.href = whatsappURL;
     }
 
     let deliveryMap = null;
